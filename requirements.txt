@@ -1,0 +1,4 @@
+multiprocessing_generator
+tqdm
+requests
+numpy

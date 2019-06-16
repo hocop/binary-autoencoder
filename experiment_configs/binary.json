@@ -1,0 +1,38 @@
+{
+    "model_name": "binary",
+    
+    "encoder_cell": "gru",
+    "encoder_type": "rnn_bidi",
+    "encoder_layers": 1,
+    
+    "latent_type": "binary",
+    
+    "decoder_cell": "gru",
+    "decoder_layers": 1,
+    "concat_latent_to_words": false,
+    
+    "vocab_size": 20000,
+    "hidden_size": 512,
+    "latent_size": 50,
+    "dropout_rate": 0.2,
+    
+    "tokens_per_batch": 5000,
+    
+    "num_epochs": 1,
+    "learning_rate": 0.001,
+    "clip_grad_norm": 2.0,
+    "keep_checkpoint_max": 10,
+    
+    "data_path": "/home/<user_name>/data/language_modeling/data/",
+    "model_path": "/home/<user_name>/data/language_modeling/model_data/<model_name>/",
+    "output_path": "/home/<user_name>/data/language_modeling/model_output/<model_name>/",
+    
+    "max_input_length": 1000,
+    "max_output_length": 100,
+    
+    "buffer_size": 10000,
+    "epoch_size": 0,
+    
+    
+    "dataset_link": "https://cloud-api.yandex.net:443/v1/disk/public/resources/download?public_key=https%3A%2F%2Fyadi.sk%2Fd%2FJFjCihmhWQ1S6A"
+}
