@@ -1,9 +1,9 @@
 # Binary autoencoder and corresponding experiments.
 This repository contains main language modeling experiments from my paper (unpublished yet):  
-    * binary autoencoder (main subject of paper)
-    * variational autoencoder (strong baseline)
-    * bottleneck autoencoder (weak baseline)
-    * just RNN language model
+* binary autoencoder (main subject of paper)  
+* variational autoencoder (strong baseline)  
+* bottleneck autoencoder (weak baseline)  
+* just RNN language model  
 
 ## Setup
 Install requirements: 
