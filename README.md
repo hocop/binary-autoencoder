@@ -16,7 +16,7 @@ Then download datasets and embeddings:
     python3 run.py download_dataset.py download_embeddings.py experiment_configs/binary.json
 ## How to reproduce experiments
 For example, binary autoencoder.  
-Open `experiment_configs/autoencoders/binary.json`. Look at hyperparameters. Note that all pathes listed in this file will be created on your computer.
+Open `experiment_configs/binary.json`. Look at hyperparameters. Note that all pathes listed in this file will be created on your computer.
 
     # train autoencoder
     python3 train.py experiment_configs/binary.json
@@ -27,7 +27,7 @@ Open `experiment_configs/autoencoders/binary.json`. Look at hyperparameters. Not
     # view the resulting file
     head ~/data/language_modeling/model_output/binary/vectors.txt
     # decode binary vectors back to text
-    python3 decode_file.py experiment_configs/autoencoders/binary.json
+    python3 decode_file.py experiment_configs/binary.json
     # compare the original text and the decoded text
     sdiff \
         ~/data/language_modeling/data/test.txt \
