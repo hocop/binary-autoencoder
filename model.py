@@ -61,7 +61,7 @@ def model_fn(inputs, hparams, mode, labels=None, invert=None):
 
 def latent_layer(inputs, hparams, mode, invert):
     assert mode in ['train', 'encode', 'eval', 'eval_sample']
-    assert hparams['latent_type'] in ['bottleneck', 'vae', 'binary', None]
+    assert hparams['latent_type'] in ['bottleneck', 'vae', 'binary', 'gumbel', None]
     with tf.variable_scope('latent'):
         loss = {}
         if hparams['latent_type'] == 'bottleneck':
@@ -84,22 +84,34 @@ def latent_layer(inputs, hparams, mode, invert):
                 latent = mu + sigma * tf.random_normal(tf.shape(sigma))
             else:
                 latent = mu
-        elif hparams['latent_type'] == 'binary':
+        elif hparams['latent_type'] in ['binary', 'gumbel']:
             # probability vector
-            energy = tf.layers.dense(inputs, hparams['latent_size'])
-            prob = tf.nn.sigmoid(energy)
+            logits = tf.layers.dense(inputs, hparams['latent_size'])
             if invert is not None:
                 inv_mask = tf.reshape(tf.one_hot(invert, hparams['latent_size']), [1, hparams['latent_size']])
-                prob = (1 - inv_mask) * prob + inv_mask * (1 - prob)
+                logits = (1 - inv_mask) * logits + inv_mask * (-logits)
+            prob = tf.nn.sigmoid(logits)
             # random sampling on train, or just rounding on inference
             if mode in ['train', 'eval_sample']:
-                threshold = tf.random_uniform(tf.shape(prob), 0, 1)
+                if hparams['latent_type'] == 'binary':
+                    epsilon = tf.random_uniform(tf.shape(prob), 0, 1)
+                    latent = step_function(prob - epsilon)
+                    latent = latent + prob - tf.stop_gradient(prob)
+                else:
+                    e = tf.reshape(logits, [-1, hparams['latent_size'], 1])
+                    g1 = -tf.log(-tf.log(tf.random_uniform(tf.shape(e), 0, 1) + 1e-12) + 2e-12)
+                    g2 = -tf.log(-tf.log(tf.random_uniform(tf.shape(e), 0, 1) + 1e-12) + 2e-12)
+                    # Gumbel-softmax
+                    latent = tf.nn.softmax(tf.concat([e + g1, -e + g2], 2), 2)[:, :, 0]
             else:
-                threshold = 0.5
-            latent = step_function(prob - threshold)
-            latent = latent + prob - tf.stop_gradient(prob)
-            #latent = energy
-        else:
+                latent = step_function(prob - 0.5)
+                # latent = prob
+                # latent = logits
+            if hparams.get('use_kl', False):
+                q = 1 - prob
+                kl = tf.reduce_sum(prob * tf.log(prob + 1e-12) + q * tf.log(q + 1e-12) - tf.log(0.5), 1)
+                loss['kl'] = tf.reduce_mean(kl)
+        elif hparams['latent_type'] is None:
             latent = inputs
     return latent, loss
 
