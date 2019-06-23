@@ -1,4 +1,4 @@
-# Binary autoencoder and corresponding experiments.
+# Binary Autoencoder for Text Modeling.
 This repository contains main language modeling experiments from my paper (unpublished yet):  
 * binary autoencoder (main subject of paper)  
 * variational autoencoder (strong baseline)  
