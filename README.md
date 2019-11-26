@@ -1,5 +1,7 @@
 # Binary Autoencoder for Text Modeling.
-This repository contains main language modeling experiments from my paper (unpublished yet):  
+For all details please check out the paper: https://easychair.org/publications/preprint/9rjT  
+
+This repository contains main language modeling experiments from the paper:  
 * binary autoencoder (main subject of paper)  
 * variational autoencoder (strong baseline)  
 * bottleneck autoencoder (weak baseline)  
